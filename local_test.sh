@@ -5,7 +5,6 @@ role=$1
 if [ "$1" = "consumer" ]; then
   docker run \
     -p 8087:8087 \
-    -p 20000:20000 \
     -it dubbo-agent:1.0.0 $role
 else
   docker run \

@@ -17,6 +17,7 @@
                             (timbre/debug "Receive msg: " msg)
                             (d/let-flow [resp (d/future (f msg))]
                                         (s/put! s resp)
+                                        (timbre/debug "Send Resp: " resp)
                                         (d/recur))))
               (d/catch
                 (fn [ex]

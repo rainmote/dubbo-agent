@@ -18,6 +18,7 @@
 
 (defn on-dubbo-response [msg]
   (timbre/debug "Receive dubbo server resp:" msg)
+  (timbre/debug "Rpc request map:" @*rpc-id-to-resp*)
   (when (= (some-> msg :flags :type) false)                 ; 0 mean is response
     (let [rpc-id (some-> msg :rpc-id)
           result (get @*rpc-id-to-resp* rpc-id)]

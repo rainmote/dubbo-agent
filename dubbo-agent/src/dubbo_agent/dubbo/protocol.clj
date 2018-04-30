@@ -23,7 +23,7 @@
                  :SERVER_THREADPOOL_EXHAUSTED_ERROR 100})
 
 (def hash-base (bit-shift-left
-                 (bit-and (- (bit-shift-left 1 32) 1)
+                 (bit-and (- (bit-shift-left 1 31) 1)
                           (hash [(util/get-local-ip)
                                  (cfg/get [:global :agent-port])]))
                  32))
