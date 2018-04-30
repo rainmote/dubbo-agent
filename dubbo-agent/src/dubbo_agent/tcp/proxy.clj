@@ -6,17 +6,25 @@
             [gloss.io :as io]
             [taoensso.timbre :as timbre]
             [dubbo-agent.dubbo.protocol :as dubbo-pr]
-            [dubbo-agent.dubbo.service :as dubbo]))
+            [dubbo-agent.dubbo.service :as dubbo]
+            [dubbo-agent.trace :as trace])
+  (:import [io.netty.bootstrap ServerBootstrap]
+           [io.netty.channel.nio NioEventLoopGroup]
+           [io.netty.channel.socket.nio NioServerSocketChannel]
+           [io.netty.channel ChannelOption]
+           [io.netty.buffer PooledByteBufAllocator]))
 
 (defn handler [f]
   (fn [s info]
     (d/loop []
             (->
-              (d/let-flow [msg (s/take! s ::none)]
+              (d/let-flow [msg (s/take! s ::none)
+                           trace (trace/init-trace (:rpc-id msg))]
                           (when-not (= :none msg)
                             (timbre/debug "Receive msg: " msg)
                             (d/let-flow [resp (d/future (f msg))]
                                         (s/put! s resp)
+                                        (trace/finish trace)
                                         (timbre/debug "Send Resp: " resp)
                                         (d/recur))))
               (d/catch
@@ -46,7 +54,13 @@
     (fn [s info]
       (timbre/debug "Found tcp connect: " s)
       (handler (wrap-duplex-stream dubbo-pr/protocol s) info))
-    {:port port}))
+    {:port port
+     :bootstrap-transform (fn [x]
+                            (doto x
+                              (.group (NioEventLoopGroup.) (NioEventLoopGroup. 100))
+                              (.channel NioServerSocketChannel)
+                              (.option ChannelOption/TCP_NODELAY true)
+                              (.option ChannelOption/ALLOCATOR PooledByteBufAllocator/DEFAULT)))}))
 
 (defn start [port]
   (_start (dubbo-handler) port))

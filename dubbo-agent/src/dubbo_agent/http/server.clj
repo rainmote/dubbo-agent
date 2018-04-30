@@ -9,7 +9,13 @@
             [compojure.handler]
             [compojure.core :as compojure]
             [dubbo-agent.slb :as slb]
-            [dubbo-agent.dubbo.service :as dubbo]))
+            [dubbo-agent.dubbo.service :as dubbo]
+            [dubbo-agent.trace :as trace])
+  (:import [io.netty.bootstrap ServerBootstrap]
+           [io.netty.channel.nio NioEventLoopGroup]
+           [io.netty.channel.socket.nio NioServerSocketChannel]
+           [io.netty.channel ChannelOption]
+           [io.netty.buffer PooledByteBufAllocator]))
 
 (defn resp [status content]
   (response/status (-> (response/response content)
@@ -19,6 +25,8 @@
 (defn dubbo-handler [req]
   (timbre/debug "Http receive request parameter: " (:params req))
   (let [{:keys [interface method parameterTypesString parameter]} (:params req)
+        uuid (str (java.util.UUID/randomUUID))
+        trace (trace/init-trace uuid)
         target (slb/chose-by-weight)
         [host port] (some-> target (clojure.string/split #":"))]
     (timbre/debug "Chose server: " host " port: " port)
@@ -27,10 +35,15 @@
       (let [dubbo-req-param {:interface interface
                              :method method
                              :parameter-type parameterTypesString
-                             :parameter parameter}
+                             :parameter parameter
+                             :uuid uuid}
+            _ (trace/add-tracepoint trace :SendRequestBefore)
             resp (dubbo/invoke host
                                (Integer/parseInt port)
-                               dubbo-req-param)]
+                               dubbo-req-param)
+            ;;resp (deref resp-future 100 nil)
+            ]
+        (trace/finish trace)
         (str (some-> resp :content second))))))
 
 (defn echo-handler [req]
@@ -54,4 +67,10 @@
 
 (defn start-http-server [port]
   (timbre/info "Consumer http server started, listen port:" port)
-  (http/start-server app {:port port}))
+  (http/start-server app {:port port
+                          :bootstrap-transform (fn [x]
+                                                 (doto x
+                                                   (.group (NioEventLoopGroup.) (NioEventLoopGroup. 100))
+                                                   (.channel NioServerSocketChannel)
+                                                   (.option ChannelOption/TCP_NODELAY true)
+                                                   (.option ChannelOption/ALLOCATOR PooledByteBufAllocator/DEFAULT)))}))

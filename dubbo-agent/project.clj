@@ -31,6 +31,5 @@
                  [slingshot "0.10.3"]
                  [com.cemerick/url "0.1.0"]
 
-                 ;; for rpc
-                 [com.taoensso/nippy "2.13.0"]
+                 [io.netty/netty-all "4.1.24.Final"]
                  ])

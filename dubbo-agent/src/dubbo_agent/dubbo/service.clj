@@ -5,7 +5,8 @@
             [manifold.deferred :as d]
             [manifold.stream :as s]
             [taoensso.timbre :as timbre]
-            [dubbo-agent.dubbo.protocol :as dubbo-pr])
+            [dubbo-agent.dubbo.protocol :as dubbo-pr]
+            [dubbo-agent.trace :as trace])
   (:import [io.netty.bootstrap Bootstrap]
            [io.netty.channel ChannelOption]
            [io.netty.buffer PooledByteBufAllocator]))
@@ -65,7 +66,7 @@
 ;; reference: http://aleph.io/manifold/streams.html
 (defn invoke
   [host port opts]
-  (let [{:keys [interface method parameter-type parameter timeout]
+  (let [{:keys [interface method parameter-type parameter timeout uuid]
          :or {timeout 1000}} opts
         content {:service-name interface
                  :method method
@@ -77,6 +78,7 @@
       ;; record request id
       (swap! *rpc-id-to-resp*
              assoc (:rpc-id frame) result)
+      (timbre/info "uuid: " uuid "\trpc-id: " (:rpc-id frame))
       ;; send request
       (d/let-flow [c (get-connect host port)]
                   (s/try-put! c frame timeout ::timeout))

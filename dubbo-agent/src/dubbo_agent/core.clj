@@ -12,7 +12,7 @@
                                 :required true}
                      :agent-port {:type :number
                                   :default 19527}
-                     :logs {:nested {:dir {:default "/Users/lianshitw/tianchi/reconsitution"}
+                     :logs {:nested {:dir {:default "/root/logs"}
                                      :name {:default "agent.log"}
                                      :level {:default :debug}}}}}
    :consumer {:nested {:port {:type :number
@@ -49,10 +49,9 @@
     (doall
       (timbre/merge-config! {:level (cfg/get [:global :logs :level])
                              :appenders {:spit (appenders/spit-appender {:fname f})}
-                             ;;:output-fn (partial timbre/default-output-fn {:stacktrace-fonts {}})
-                             })))
+                             :output-fn (partial timbre/default-output-fn {:stacktrace-fonts {}})})))
 
   ;; for profile
-  ;; (taoensso.tufte.timbre/add-timbre-logging-handler! {})
+  (taoensso.tufte.timbre/add-timbre-logging-handler! {})
 
   (start/start))
