@@ -86,14 +86,17 @@
       @result)))
 
 (defn forward-frame
-  [host port frame & {:keys [timeout]
+  [host port frame & {:keys [timeout trace]
                       :or {timeout 1000}}]
-  (timbre/info "Forward frame:" (timbre/get-env))
+  (timbre/debug "Forward frame:" (timbre/get-env))
+  (trace/add-tracepoint trace :EnterForwardFrame)
   (connect-if-needed host port)
   (let [result (d/deferred)]
     (swap! *rpc-id-to-resp*
            assoc (:rpc-id frame) result)
     (d/let-flow [c (get-connect host port)]
+                (trace/add-tracepoint trace :PutFrameBefore)
                 (s/try-put! c frame timeout ::timeout))
     ;(d/timeout! result (cfg/get [:provider :wait]) nil))
+    (trace/add-tracepoint trace :BeginWaitResp)
     @result))

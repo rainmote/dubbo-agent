@@ -22,7 +22,8 @@
                            trace (trace/init-trace (:rpc-id msg))]
                           (when-not (= :none msg)
                             (timbre/debug "Receive msg: " msg)
-                            (d/let-flow [resp (d/future (f msg))]
+                            (d/let-flow [resp (d/future (f msg trace))]
+                                        (trace/add-tracepoint trace :GetDubboResp)
                                         (s/put! s resp)
                                         (trace/finish trace)
                                         (timbre/debug "Send Resp: " resp)
@@ -33,10 +34,11 @@
                   (s/close! s)))))))
 
 (defn dubbo-handler []
-  (handler (fn [x]
+  (handler (fn [msg trace]
              (dubbo/forward-frame "127.0.0.1"
                                   (cfg/get [:provider :port])
-                                  x))))
+                                  msg
+                                  :trace trace))))
 
 (defn wrap-duplex-stream
   [protocol s]
