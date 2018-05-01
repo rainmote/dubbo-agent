@@ -55,12 +55,13 @@
       (timbre/debug "Found tcp connect: " s)
       (handler (wrap-duplex-stream dubbo-pr/protocol s) info))
     {:port port
-     :bootstrap-transform (fn [x]
-                            (doto x
-                              (.group (NioEventLoopGroup.) (NioEventLoopGroup. 100))
-                              (.channel NioServerSocketChannel)
-                              (.option ChannelOption/TCP_NODELAY true)
-                              (.option ChannelOption/ALLOCATOR PooledByteBufAllocator/DEFAULT)))}))
+     ;;:bootstrap-transform (fn [x]
+     ;;                       (doto x
+     ;;                         ;;(.group (NioEventLoopGroup.) (NioEventLoopGroup. 100))
+     ;;                         (.channel NioServerSocketChannel)
+     ;;                         (.option ChannelOption/TCP_NODELAY true)
+     ;;                         (.option ChannelOption/ALLOCATOR PooledByteBufAllocator/DEFAULT)))
+     }))
 
 (defn start [port]
   (_start (dubbo-handler) port))

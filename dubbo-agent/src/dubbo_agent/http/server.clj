@@ -68,9 +68,10 @@
 (defn start-http-server [port]
   (timbre/info "Consumer http server started, listen port:" port)
   (http/start-server app {:port port
-                          :bootstrap-transform (fn [x]
-                                                 (doto x
-                                                   (.group (NioEventLoopGroup.) (NioEventLoopGroup. 100))
-                                                   (.channel NioServerSocketChannel)
-                                                   (.option ChannelOption/TCP_NODELAY true)
-                                                   (.option ChannelOption/ALLOCATOR PooledByteBufAllocator/DEFAULT)))}))
+                          ;;:bootstrap-transform (fn [x]
+                          ;;                       (doto x
+                          ;;                         ;;(.group (NioEventLoopGroup.) (NioEventLoopGroup. 100))
+                          ;;                         (.channel NioServerSocketChannel)
+                          ;;                         (.option ChannelOption/TCP_NODELAY true)
+                          ;;                         (.option ChannelOption/ALLOCATOR PooledByteBufAllocator/DEFAULT)))
+                          }))
