@@ -54,7 +54,7 @@
 
 (def routes
   (compojure/routes
-    (compojure/POST "/" request (dubbo-handler request))
+    (compojure/POST "/" request @(future (dubbo-handler request)))
     (compojure/POST "/echo" request (echo-handler request))
     (compojure/GET "/test" [] test-handler)
     (compojure.route/not-found "Not Found Page!")))

@@ -22,9 +22,9 @@
                            trace (trace/init-trace (:rpc-id msg))]
                           (when-not (= :none msg)
                             (timbre/debug "Receive msg: " msg)
-                            (d/let-flow [resp (d/future (f msg trace))]
-                                        (trace/add-tracepoint trace :GetDubboResp)
-                                        (s/put! s resp)
+                            (d/let-flow [resp (d/future (f msg trace))
+                                         _ (trace/add-tracepoint trace :GetDubboResp)
+                                         result (s/put! s resp)]
                                         (trace/finish trace)
                                         (timbre/debug "Send Resp: " resp)
                                         (d/recur))))
