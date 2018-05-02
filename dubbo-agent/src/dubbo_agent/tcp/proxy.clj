@@ -12,7 +12,8 @@
            [io.netty.channel.nio NioEventLoopGroup]
            [io.netty.channel.socket.nio NioServerSocketChannel]
            [io.netty.channel ChannelOption]
-           [io.netty.buffer PooledByteBufAllocator]))
+           [io.netty.buffer PooledByteBufAllocator])
+  (:gen-class))
 
 (defn handler [f]
   (fn [s info]

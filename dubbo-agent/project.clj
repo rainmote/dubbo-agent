@@ -14,6 +14,8 @@
                  [gloss "0.2.6"]
 
                  ;; for http
+                 [nginx-clojure "0.4.5"]
+                 [nginx-clojure/nginx-clojure-embed "0.4.5"]
                  [ring "1.6.3"]
                  [compojure "1.6.1"]
                  [ring/ring-json "0.4.0"]
