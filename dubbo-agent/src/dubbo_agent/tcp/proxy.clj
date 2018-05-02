@@ -24,11 +24,10 @@
                             (future
                               (let [trace (trace/init-trace (:rpc-id msg))]
                                 (timbre/debug "Receive msg: " msg)
-                                (d/let-flow [resp (d/future (f msg trace))
-                                             _ (trace/add-tracepoint trace :GetDubboResp)
-                                             result (s/put! s resp)]
-                                            (trace/finish trace)
-                                            (timbre/debug "Send Resp: " resp)))))
+                                (trace/add-tracepoint trace :GetDubboResp)
+                                (s/put! s (f msg trace))
+                                (trace/finish trace)
+                                (timbre/debug "Send Resp: " resp))))
                           (d/recur))
               (d/catch
                 (fn [ex]

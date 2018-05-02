@@ -4,7 +4,8 @@
             [omniconf.core :as cfg]
             [taoensso.timbre :as timbre]
             [dubbo-agent.util :as util])
-  (:import [com.alibaba.fastjson JSON]))
+  (:import [com.alibaba.fastjson JSON])
+  (:gen-class))
 
 (def dubbo-magic 0xdabb)
 

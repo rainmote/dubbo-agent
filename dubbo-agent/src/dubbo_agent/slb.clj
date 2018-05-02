@@ -3,7 +3,8 @@
             [taoensso.timbre :as timbre]
             [clojure.spec.alpha :as alpha]
             [dubbo-agent.etcd.client :as etcd]
-            [dubbo-agent.util :as util]))
+            [dubbo-agent.util :as util])
+  (:gen-class))
 
 (def ^:dynamic *data* (atom {}))
 
