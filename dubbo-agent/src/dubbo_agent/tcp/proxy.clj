@@ -19,16 +19,17 @@
   (fn [s info]
     (d/loop []
             (->
-              (d/let-flow [msg (s/take! s ::none)
-                           trace (trace/init-trace (:rpc-id msg))]
+              (d/let-flow [msg (s/take! s ::none)]
                           (when-not (= :none msg)
-                            (timbre/debug "Receive msg: " msg)
-                            (d/let-flow [resp (d/future (f msg trace))
-                                         _ (trace/add-tracepoint trace :GetDubboResp)
-                                         result (s/put! s resp)]
-                                        (trace/finish trace)
-                                        (timbre/debug "Send Resp: " resp)
-                                        (d/recur))))
+                            (future
+                              (let [trace (trace/init-trace (:rpc-id msg))]
+                                (timbre/debug "Receive msg: " msg)
+                                (d/let-flow [resp (d/future (f msg trace))
+                                             _ (trace/add-tracepoint trace :GetDubboResp)
+                                             result (s/put! s resp)]
+                                            (trace/finish trace)
+                                            (timbre/debug "Send Resp: " resp)))))
+                          (d/recur))
               (d/catch
                 (fn [ex]
                   (s/put! s (str "Error: " ex))
@@ -57,14 +58,7 @@
     (fn [s info]
       (timbre/debug "Found tcp connect: " s)
       (handler (wrap-duplex-stream dubbo-pr/protocol s) info))
-    {:port port
-     ;;:bootstrap-transform (fn [x]
-     ;;                       (doto x
-     ;;                         ;;(.group (NioEventLoopGroup.) (NioEventLoopGroup. 100))
-     ;;                         (.channel NioServerSocketChannel)
-     ;;                         (.option ChannelOption/TCP_NODELAY true)
-     ;;                         (.option ChannelOption/ALLOCATOR PooledByteBufAllocator/DEFAULT)))
-     }))
+    {:port port}))
 
 (defn start [port]
   (_start (dubbo-handler) port))
