@@ -26,8 +26,7 @@
                                 (timbre/debug "Receive msg: " msg)
                                 (trace/add-tracepoint trace :GetDubboResp)
                                 (s/put! s (f msg trace))
-                                (trace/finish trace)
-                                (timbre/debug "Send Resp: " resp))))
+                                (trace/finish trace))))
                           (d/recur))
               (d/catch
                 (fn [ex]
