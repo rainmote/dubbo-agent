@@ -1,4 +1,4 @@
-(ns dubbo-agent.http.server
+(ns dubbo-agent.http.nginx
   (:require [nginx.clojure.embed :as nginx]
             [omniconf.core :as cfg]
             [taoensso.timbre :as timbre]

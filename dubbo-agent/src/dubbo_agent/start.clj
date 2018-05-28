@@ -3,7 +3,7 @@
             [dubbo-agent.util :as util]
             [dubbo-agent.etcd.client :as etcd]
             [dubbo-agent.slb :as slb]
-            [dubbo-agent.http.server :as http-server]
+            [dubbo-agent.http.aleph :as http-server]
             [dubbo-agent.tcp.proxy :as tcp-proxy]
             [taoensso.timbre :as timbre]))
 
