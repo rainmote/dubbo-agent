@@ -11,6 +11,10 @@ if [[ "$1" == "consumer" ]]; then
   java -jar \
        -Xms1536M \
        -Xmx1536M \
+       -XX:NewRatio=1 \
+       -XX:AutoBoxCacheMax=20000 \
+       -XX:MaxDirectMemotySize=1280M \
+       -Dio.netty.leakDetectionLevel=DISABLED \
        -Dglobal.run-type=consumer \
        -Dglobal.agent-port=20900 \
        -Detcd.host=$ETCD_HOST \
@@ -23,6 +27,10 @@ elif [[ "$1" == "provider-small" ]]; then
   java -jar \
        -Xms512M \
        -Xmx512M \
+       -XX:NewRatio=1 \
+       -XX:AutoBoxCacheMax=20000 \
+       -XX:MaxDirectMemotySize=1280M \
+       -Dio.netty.leakDetectionLevel=DISABLED \
        -Dglobal.run-type=provider \
        -Dglobal.agent-port=20901 \
        -Dprovider.port=20889 \
@@ -36,6 +44,10 @@ elif [[ "$1" == "provider-medium" ]]; then
   java -jar \
        -Xms1536M \
        -Xmx1536M \
+       -XX:NewRatio=1 \
+       -XX:AutoBoxCacheMax=20000 \
+       -XX:MaxDirectMemotySize=1280M \
+       -Dio.netty.leakDetectionLevel=DISABLED \
        -Dglobal.run-type=provider \
        -Dglobal.agent-port=20902 \
        -Dprovider.port=20890 \
@@ -49,6 +61,10 @@ elif [[ "$1" == "provider-large" ]]; then
   java -jar \
        -Xms2560M \
        -Xmx2560M \
+       -XX:NewRatio=1 \
+       -XX:AutoBoxCacheMax=20000 \
+       -XX:MaxDirectMemotySize=1280M \
+       -Dio.netty.leakDetectionLevel=DISABLED \
        -Dglobal.run-type=provider \
        -Dglobal.agent-port=20903 \
        -Dprovider.port=20891 \
