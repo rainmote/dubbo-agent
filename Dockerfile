@@ -12,8 +12,8 @@ RUN lein deps
 RUN cp "$(lein uberjar 2> stderr | sed -n 's/^Created \(.*standalone\.jar\)/\1/p' | grep standalone.jar)" target/app-standalone.jar
 
 
-FROM registry.cn-hangzhou.aliyuncs.com/tianchi4-docker/tianchi4-services AS builder
-FROM registry.cn-hangzhou.aliyuncs.com/tianchi4-docker/debian-jdk8
+FROM registry.cn-hangzhou.aliyuncs.com/aliware2018/services AS builder
+FROM registry.cn-hangzhou.aliyuncs.com/aliware2018/debian-jdk8-devel
 
 COPY --from=builder /root/workspace/services/mesh-provider/target/mesh-provider-1.0-SNAPSHOT.jar /root/dists/mesh-provider.jar
 COPY --from=builder /root/workspace/services/mesh-consumer/target/mesh-consumer-1.0-SNAPSHOT.jar /root/dists/mesh-consumer.jar
