@@ -11,6 +11,7 @@
             [compojure.core :as compojure]
             [manifold.deferred :as d]
             [dubbo-agent.slb :as slb]
+            [dubbo-agent.trace :as trace]
             [dubbo-agent.dubbo.service :as dubbo]))
 
 (defn resp [status content]
@@ -25,32 +26,34 @@
 (defn dubbo-handler [req]
   (timbre/debug "Http receive request parameter: " (:params req))
   (d/future
-    (let [{:keys [interface method parameterTypesString parameter]} (:params req)
+    (let [{:keys [interface method parameterTypesString parameter]}
+            (clojure.walk/keywordize-keys (:params req))
+          uuid (str (java.util.UUID/randomUUID))
+          trace (trace/init-trace uuid)
           target (slb/chose-by-weight)
           [host port] (some-> target (clojure.string/split #":"))]
-      (timbre/debug "Chose server: " host " port: " port)
+      (timbre/debug "Chose server: " host " port: " port " parameter" parameter)
       (if (or (empty? target) (nil? target) (nil? host) (nil? port))
         (timbre/warn "Http process error, don't chose target, ret: " target)
         (let [dubbo-req-param {:interface interface
                                :method method
                                :parameter-type parameterTypesString
-                               :parameter parameter}
+                               :parameter parameter
+                               :uuid uuid}
+              _ (trace/add-tracepoint trace :SendRequestBefore)
               r (dubbo/invoke host
                               (Integer/parseInt port)
                               dubbo-req-param)]
+          (trace/finish trace)
           (resp 200 (str (some-> r :content second))))))))
 
 (defn echo-handler [req]
   (:params req))
 
-(defn test-handler [req]
-  (repeat 30 "HelloWorld"))
-
 (def routes
   (compojure/routes
     (compojure/POST "/" [] dubbo-handler)
     (compojure/POST "/echo" [] echo-handler)
-    (compojure/GET "/test" [] test-handler)
     (compojure.route/not-found "Not Found Page!")))
 
 (def app

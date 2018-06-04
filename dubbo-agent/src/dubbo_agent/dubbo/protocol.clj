@@ -75,12 +75,13 @@
                          :service-version "0.0.0"
                          :method "hash"
                          :parameter-type "Ljava/lang/String;"
-                         :parameter "HelloWorld"
-                         :attachments {"path" default-service-name}
-                         }
+                         :parameter ""
+                         :attachments {"path" default-service-name}}
         _content (merge-with (fn [v1 v2] (or v2 v1))
                              default-content
                              content)]
+    (timbre/debug "content" content)
+    (timbre/debug "_content" _content)
     {:magic magic
      :flags flags
      :status (:OK status-map)

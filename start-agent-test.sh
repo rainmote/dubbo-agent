@@ -12,7 +12,7 @@ if [[ "$1" == "consumer" ]]; then
        -Xms1536M \
        -Xmx1536M \
        -Dglobal.run-type=consumer \
-       -Dglobal.agent-port=20900 \
+       -Dglobal.agent-port=20000 \
        -Detcd.host=$ETCD_HOST \
        -Detcd.port=$ETCD_PORT \
        -Detcd.url=$ETCD_URL \
@@ -24,8 +24,8 @@ elif [[ "$1" == "provider-small" ]]; then
        -Xms512M \
        -Xmx512M \
        -Dglobal.run-type=provider \
-       -Dglobal.agent-port=20901 \
-       -Dprovider.port=20889 \
+       -Dglobal.agent-port=30001 \
+       -Dprovider.port=20880 \
        -Detcd.host=$ETCD_HOST \
        -Detcd.port=$ETCD_PORT \
        -Detcd.url=$ETCD_URL \
@@ -37,8 +37,8 @@ elif [[ "$1" == "provider-medium" ]]; then
        -Xms1536M \
        -Xmx1536M \
        -Dglobal.run-type=provider \
-       -Dglobal.agent-port=20902 \
-       -Dprovider.port=20890 \
+       -Dglobal.agent-port=30002 \
+       -Dprovider.port=20880 \
        -Detcd.host=$ETCD_HOST \
        -Detcd.port=$ETCD_PORT \
        -Detcd.url=$ETCD_URL \
@@ -50,8 +50,8 @@ elif [[ "$1" == "provider-large" ]]; then
        -Xms2560M \
        -Xmx2560M \
        -Dglobal.run-type=provider \
-       -Dglobal.agent-port=20903 \
-       -Dprovider.port=20891 \
+       -Dglobal.agent-port=30003 \
+       -Dprovider.port=20880 \
        -Detcd.host=$ETCD_HOST \
        -Detcd.port=$ETCD_PORT \
        -Detcd.url=$ETCD_URL \

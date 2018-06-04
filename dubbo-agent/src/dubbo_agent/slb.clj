@@ -60,9 +60,9 @@
   (let [calc (fn [[k v]]
                (let [[host port] (some-> k (clojure.string/split #":"))]
                  (condp = port
-                   "20901" (vector :100 k)
-                   "20902" (vector :200 k)
-                   "20903" (vector :300 k)
+                   "30001" (vector :100 k)
+                   "30002" (vector :200 k)
+                   "30003" (vector :300 k)
                    (util/exit -1 "Please check provider port"))))
         k-weight (into {} (map calc @*data*))
         r (rand-int 600)]

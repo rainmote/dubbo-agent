@@ -20,8 +20,8 @@
     (d/loop []
             (->
               (d/let-flow [msg (s/take! s ::none)]
-                          (when-not (= :none msg)
-                            (future
+                          (when-not (= ::none msg)
+                            (d/future
                               (let [trace (trace/init-trace (:rpc-id msg))]
                                 (timbre/debug "Receive msg: " msg)
                                 (trace/add-tracepoint trace :GetDubboResp)

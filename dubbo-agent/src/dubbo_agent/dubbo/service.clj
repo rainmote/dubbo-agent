@@ -79,6 +79,7 @@
       ;; record request id
       (swap! *rpc-id-to-resp*
              assoc (:rpc-id frame) result)
+      (timbre/info "frame:" frame)
       (timbre/info "uuid: " uuid "\trpc-id: " (:rpc-id frame))
       ;; send request
       (d/let-flow [c (get-connect host port)]

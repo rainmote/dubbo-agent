@@ -11,10 +11,10 @@
   {:global {:nested {:run-type {:one-of ["provider" "consumer"]
                                 :required true}
                      :agent-port {:type :number
-                                  :default 19527}
+                                  :default 30000}
                      :logs {:nested {:dir {:default "/root/logs"}
                                      :name {:default "agent.log"}
-                                     :level {:default :info}}}}}
+                                     :level {:default :debug}}}}}
    :consumer {:nested {:port {:type :number
                               :default 20000}
                        :thread-num {:type :number
@@ -24,7 +24,7 @@
                                             :wait {:type :number
                                                    :default 1000}}}}}
    :provider {:nested {:port {:type :number
-                              :default 20901}
+                              :default 20880}
                        :wait {:type :number
                               :default 200}}}
    :etcd {:nested {:host {:default "127.0.0.1"}
@@ -38,8 +38,8 @@
   (when-let [conf (cfg/get :conf)]
     (cfg/populate-from-file conf))
   (cfg/populate-from-env)
-  (cfg/populate-from-properties)
   (cfg/populate-from-cmd args)
+  (cfg/populate-from-properties)
   (cfg/verify)
 
   ;; config timbre log file
