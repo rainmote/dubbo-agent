@@ -14,7 +14,7 @@
                                   :default 30000}
                      :logs {:nested {:dir {:default "/root/logs"}
                                      :name {:default "agent.log"}
-                                     :level {:default :debug}}}}}
+                                     :level {:default :info}}}}}
    :consumer {:nested {:port {:type :number
                               :default 20000}
                        :thread-num {:type :number

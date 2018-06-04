@@ -7,7 +7,7 @@ WORKDIR /root/workspace/agent/dubbo-agent
 
 # compile
 RUN set -eux
-RUN export TIMBRE_LEVEL=":debug"
+RUN export TIMBRE_LEVEL=":info"
 RUN lein deps
 
 # compile and rename

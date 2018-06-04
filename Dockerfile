@@ -22,9 +22,13 @@ COPY --from=builder /usr/local/bin/docker-entrypoint.sh /usr/local/bin
 COPY --from=clj /root/workspace/agent/dubbo-agent/target/app-standalone.jar /root/dists/mesh-agent.jar
 COPY --from=clj /root/workspace/agent/start-agent.sh /usr/local/bin/start-agent.sh
 
-RUN set -ex && mkdir -p /root/logs
+RUN set -ex \
+ && chmod a+x /usr/local/bin/start-agent.sh \
+ && mkdir -p /root/logs
 RUN addgroup nobody
 RUN adduser nobody nobody
 RUN echo '127.0.0.1' `hostname` | tee -a /etc/hosts
+
+EXPOSE 8087
 
 ENTRYPOINT ["docker-entrypoint.sh"]
