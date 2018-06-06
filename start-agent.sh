@@ -14,7 +14,6 @@ if [[ "$1" == "consumer" ]]; then
        -Xmx1536M \
        -XX:NewRatio=1 \
        -XX:AutoBoxCacheMax=20000 \
-       -XX:MaxDirectMemotySize=1280M \
        -Dio.netty.leakDetectionLevel=DISABLED \
        -Dglobal.run-type=consumer \
        -Dglobal.agent-port=20000 \
@@ -30,7 +29,6 @@ elif [[ "$1" == "provider-small" ]]; then
        -Xmx512M \
        -XX:NewRatio=1 \
        -XX:AutoBoxCacheMax=20000 \
-       -XX:MaxDirectMemotySize=1280M \
        -Dio.netty.leakDetectionLevel=DISABLED \
        -Dglobal.run-type=provider \
        -Dglobal.agent-port=30001 \
@@ -47,7 +45,6 @@ elif [[ "$1" == "provider-medium" ]]; then
        -Xmx1536M \
        -XX:NewRatio=1 \
        -XX:AutoBoxCacheMax=20000 \
-       -XX:MaxDirectMemotySize=1280M \
        -Dio.netty.leakDetectionLevel=DISABLED \
        -Dglobal.run-type=provider \
        -Dglobal.agent-port=30002 \
@@ -64,7 +61,6 @@ elif [[ "$1" == "provider-large" ]]; then
        -Xmx2560M \
        -XX:NewRatio=1 \
        -XX:AutoBoxCacheMax=20000 \
-       -XX:MaxDirectMemotySize=1280M \
        -Dio.netty.leakDetectionLevel=DISABLED \
        -Dglobal.run-type=provider \
        -Dglobal.agent-port=30003 \
