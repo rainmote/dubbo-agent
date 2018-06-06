@@ -29,6 +29,7 @@ RUN addgroup nobody
 RUN adduser nobody nobody
 RUN echo '127.0.0.1' `hostname` | tee -a /etc/hosts
 
+
 EXPOSE 8087
 
 ENTRYPOINT ["docker-entrypoint.sh"]
