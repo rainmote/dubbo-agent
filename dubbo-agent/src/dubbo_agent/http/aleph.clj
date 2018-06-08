@@ -42,7 +42,8 @@
                                :uuid uuid}
               _ (trace/add-tracepoint trace :SendRequestBefore)
               r (dubbo/invoke host
-                              (Integer/parseInt port)
+                              (cfg/get [:provider :port])
+                              ;; (Integer/parseInt port)
                               dubbo-req-param)]
           (trace/finish trace)
           (resp 200 (str (some-> r :content second))))))))
